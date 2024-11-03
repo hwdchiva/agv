@@ -291,7 +291,7 @@
                 <linear>0.01</linear>
                 <quadratic>0.001</quadratic>
             </attenuation>
-            <direction>-0.5 0.1 -0.9</direction>
+            <direction>0 0 0</direction>
         </light>
 
         <model name="ground_plane">
@@ -342,15 +342,15 @@
                         </box>
                     </geometry>
                     <material>
-                        <ambient>0.0 0.0 1.0 1</ambient>
-                        <diffuse>0.0 0.0 1.0 1</diffuse>
-                        <specular>0.0 0.0 1.0 1</specular>
+                        <ambient>1.0 0.8 0.0 1</ambient>
+                        <diffuse>1.0 0.8 0.0 1</diffuse>
+                        <specular>1.0 0.8 0.0 1</specular>
                     </material>
                 </visual>
                 <collision name='collision'>
                     <geometry>
                         <box>
-                            <size>1.0 1.0 0.5</size>
+                            <size>1.0 0.7 0.5</size>
                         </box>
                     </geometry>
                 </collision>
@@ -364,7 +364,7 @@
 
             <!-- Lidar -->
             <link name="lidar_link">
-              <pose relative_to="chassis">0.3 0 0.4 0 0 0</pose> <!--angles are in radian-->
+              <pose relative_to="chassis">0.0 0 0.4 0 0 0</pose>
               <inertial>
                 <mass>0.1</mass>
                 <inertia>

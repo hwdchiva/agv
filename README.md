@@ -57,7 +57,7 @@ $ ./agv_run.sh
 To run simulator with moving obstacles (actors), run script:
 
 ```
-$ ./actors_agv_run.sh
+$ ./agv_run.sh -a
 ```
 
 ## AGV World
