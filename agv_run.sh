@@ -1,3 +1,3 @@
 #!/bin/bash
 
-ign launch avg_launch.ign
+ign launch agv_launch.ign

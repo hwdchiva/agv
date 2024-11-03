@@ -1,7 +1,7 @@
 <?xml version='1.0'?>
 <ignition version='1.0'>
-  <executable name='avg_world'>
-    <command>ign gazebo avg_world.sdf</command>
+  <executable name='agv_world'>
+    <command>ign gazebo agv_world.sdf</command>
   </executable>
 
   <executable name='lidar_node'>

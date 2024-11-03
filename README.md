@@ -60,6 +60,13 @@ To run simulator with moving obstacles (actors), run script:
 $ ./actors_agv_run.sh
 ```
 
+## AGV World
+
+![Screenshot](/agv_world_preview.jpg)
+
+The mini green boxes floating in the air represent the X,Y coordinates from the waypoint.txt file. They are a visual represantion of the path the AGV should take.
+#### NOTE
+These are hard-coded into the SDF file and DO NOT get dynamically generated based on the content of waypoint.txt. If you update the coordinates on the waypoint.txt, you will have to manually update the SDF file if you want the green boxes to match your new coordinates.
 
 ## Author info
 

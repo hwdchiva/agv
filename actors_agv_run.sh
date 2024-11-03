@@ -1,3 +1,3 @@
 #!/bin/bash
 
-ign launch actors_avg_launch.ign
+ign launch actors_agv_launch.ign
