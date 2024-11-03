@@ -17,50 +17,35 @@
 
 bool m_debug = false;
 
+// Topic to publish linear and angular data
 std::string topic_pub = "/cmd_vel";
 ignition::transport::Node m_node;
 auto m_twistPub = m_node.Advertise<ignition::msgs::Twist>(topic_pub);
 
+// Obstacle detected flag
 std::mutex m_isObstacleMutex;
 bool m_isObstacle = false;
 int m_stepCount = 0;
 
-//std::mutex m_isStoppedMutex;
+// Vehicle stopped flag
 bool m_isStopped = true;
 
+// Queue for our waypoint coordinates
 typedef std::pair<double, double> Coord2D;
 std::queue<Coord2D> m_goals;
 
-typedef ignition::msgs::Vector3d Vector3d;
-Vector3d m_position;
-Vector3d m_goal;
+// Current coordinate to reach
+ignition::msgs::Vector3d m_goal;
 
 // Max steps to take after obstacle is no longer detected.
 int MAX_STEPS = 5;
 
-/*
-Sample odometry
+// Threshold limit that we reached our goal
+double GOAL_THRESHOLD = 0.3;
 
-pose {
-  position {
-    x: 6.4591636705915088
-    y: 5.2835379170630251e-13
-  }
-  orientation {
-    z: 0.26600853338802949
-    w: 0.96397067391324187
-  }
-}
-twist {
-  linear {
-    x: 2.1316282072803006e-12
-  }
-  angular {
-    z: 0.49999999964830028
-  }
-}
-*/
-
+//======================================================================
+// Print Pose
+//======================================================================
 void printPose(ignition::msgs::Pose &a_pose)
 {
   ignition::msgs::Quaternion orientation = a_pose.orientation();
@@ -79,6 +64,9 @@ void printPose(ignition::msgs::Pose &a_pose)
             << std::endl;
 }
 
+//======================================================================
+// Print Twist
+//======================================================================
 void printTwist(ignition::msgs::Twist &a_twist)
 {
   ignition::msgs::Vector3d angular = a_twist.angular();
@@ -97,7 +85,7 @@ void printTwist(ignition::msgs::Twist &a_twist)
 }
 
 //======================================================================
-//
+// Obstacle flag setter and getter
 //======================================================================
 bool isObstacle()
 {
@@ -112,17 +100,15 @@ void setIsObstacle(bool a_obstacle)
 }
 
 //======================================================================
-//
+// Vehicle stopped flag setter and getter
 //======================================================================
 bool isStopped()
 {
-  //std::scoped_lock lock(m_isStoppedMutex);
   return m_isStopped;
 }
 
 void setIsStopped(bool a_stop)
 {
-  //std::scoped_lock lock(m_isStoppedMutex);
   m_isStopped = a_stop;
 }
 
@@ -135,6 +121,8 @@ void cbLidar(const ignition::msgs::LaserScan &a_scan)
 
   bool isShortRange = false;
   int i = 0;
+  // Check scan data and find the first instance of the range being close
+  // to an object
   for (; i < a_scan.ranges_size(); i++)
   {
     if (a_scan.ranges(i) < 1.0)
@@ -163,15 +151,17 @@ void cbLidar(const ignition::msgs::LaserScan &a_scan)
 
     data.mutable_linear()->set_x(0.0);
 
-    if (m_debug) std::cout << "Obstacle! Rotate [" << i << "]:" << (spinLeft ? "left" : "right") << std::endl;
     m_twistPub.Publish(data);
+
+    if (m_debug) std::cout << "Obstacle! Rotate [" << i << "]:" << (spinLeft ? "left" : "right") << std::endl;
   }
   else if (m_stepCount++ < MAX_STEPS)
   {
-    if (m_debug) std::cout << "Stepping!" << std::endl;
     data.mutable_linear()->set_x(0.5);
     data.mutable_angular()->set_z(0.0);
     m_twistPub.Publish(data);
+
+    if (m_debug) std::cout << "Stepping! " << m_stepCount << std::endl;
   }
   else
       setIsObstacle(false);
@@ -202,7 +192,7 @@ void cbOdometry(const ignition::msgs::Odometry &a_odom)
   // Get Pose data
   ignition::msgs::Pose pose = a_odom.pose();
 
-  // Create a quaternion
+  // Create a TF2 quaternion from our pose
   ignition::msgs::Quaternion orientation = pose.orientation();
   tf2::Quaternion q(orientation.x(), orientation.y(), orientation.z(), orientation.w());
 
@@ -213,22 +203,23 @@ void cbOdometry(const ignition::msgs::Odometry &a_odom)
 
   // Calculate position difference to goal
   ignition::msgs::Vector3d position = pose.position();
-
   double diff_x = m_goal.x() - position.x();
   double diff_y = m_goal.y() - position.y();
 
+  // Calculate the angle to our goal
   double angle_to_goal = atan2(diff_y, diff_x);
 
   // Calculate our heading error
   double angle_diff = angle_to_goal - yaw;
 
-  if (abs(diff_x) < 0.3 && abs(diff_y) < 0.3)
+  if ( (abs(diff_x) < GOAL_THRESHOLD) && (abs(diff_y) < GOAL_THRESHOLD) )
   {
     // Reach goal. Stop
-    if (m_debug) std::cout << std::endl << "Stop!";
     data.mutable_linear()->set_x(0.0);
     data.mutable_angular()->set_z(0.0);
     setIsStopped(true);
+
+    if (m_debug) std::cout << std::endl << "Stop!";
   }
   else if (abs(angle_diff) > 0.5)
   {
@@ -236,8 +227,9 @@ void cbOdometry(const ignition::msgs::Odometry &a_odom)
     data.mutable_linear()->set_x(0.0);
     double angle_direction = (angle_diff > 0) ? 1.0 : -1.0;
     data.mutable_angular()->set_z(0.3 * angle_direction);
-    if (m_debug) std::cout << "Spinning! Rotate " << (angle_direction ? "left" : "right");
     setIsStopped(false);
+
+    if (m_debug) std::cout << "Spinning! Rotate " << (angle_direction ? "left" : "right");
   }
   else
   {
@@ -247,9 +239,10 @@ void cbOdometry(const ignition::msgs::Odometry &a_odom)
     data.mutable_angular()->set_z(0.0);
     setIsStopped(false);
   }
-  if (m_debug) std::cout << "\tposition: " << position.x() << ", " << position.y() << ", " << position.z() << std::endl;
-  //if (m_debug) std::cout << " -> Yaw: " << yaw << ", " << "Goal: " << angle_to_goal << ", Diff: " << angle_diff << std::endl;
+
   m_twistPub.Publish(data);
+
+  if (m_debug) std::cout << "\tposition: " << position.x() << ", " << position.y() << ", " << position.z() << std::endl;
 }
 
 //======================================================================
@@ -270,8 +263,9 @@ bool setGoals(const char* filename)
       token = strtok(NULL, ",");
       double y = atof(token);
 
-      if (m_debug) std::cout << "Adding goal: (" << x << "," << y << ")" << std::endl;
       m_goals.push(Coord2D(x,y));
+
+      if (m_debug) std::cout << "Adding goal: (" << x << "," << y << ")" << std::endl;
     }
 
     fclose(file);

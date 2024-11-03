@@ -42,22 +42,22 @@ $ ./build_agv.sh
 
 Update ```waypoint.txt``` text file with set of local coordinate points to follow, one coordinate per line. Each X,Y coordinate pair should be separated using a comma. There is no syntax check, so please follow this format.  (i.e):
 
-    ```
-    4.0, 0.0
-    8.0, 0.0
-    12.0, 0.0
-    ```
+```
+4.0, 0.0
+8.0, 0.0
+12.0, 0.0
+```
 
 Run simulator launch script <br />
 
 ```
-$ ./agv_run.sh
+$ ./run_agv.sh
 ```
 
 To run simulator with moving obstacles (actors), run script:
 
 ```
-$ ./agv_run.sh -a
+$ ./run_agv.sh -a
 ```
 
 ## AGV World
