@@ -25,8 +25,8 @@ chmod 0700 /run/user/1000/
 ```
 
 ## Documentation
-Software design architecture for an AGV can be found under the ```doc``` directory in file ```AVG_Software_Design.pdf```.<br />
-Under the same folder, you can find an explanation about my obstacle avoidance algorithm in file ```Obstacle_Avoidance_Algorithm.pdf```.
+Software design architecture for an AGV can be found under the ```doc``` directory in file ```AGV_Software_Design.pdf```.<br />
+Under the same folder, you can find an explanation about my obstacle avoidance algorithm in file ```AGV_Obstacle_Avoidance_Algorithm.pdf```.
 
 ## Disclamer
 
@@ -34,20 +34,32 @@ This article assumes having basic knowledge of ROS, Gazebo, LiDARs, and Linux, s
 
 ## How to run
 
-1. Build ROS node that handles navigation and obstacle avoidance<br />
-<br />
-**Run** ```$ ./build_agv.sh``` <br />
-<br />
-2. Update ```waypoint.txt``` text file with set of local coordinate points to follow, one coordinate per line. Each X,Y coordinate pair should be separated using a comma. There is no syntax check, so please follow this format.  (i.e):
+Build ROS node that handles navigation and obstacle avoidance
+
+```
+$ ./build_agv.sh
+```
+
+Update ```waypoint.txt``` text file with set of local coordinate points to follow, one coordinate per line. Each X,Y coordinate pair should be separated using a comma. There is no syntax check, so please follow this format.  (i.e):
+
     ```
     4.0, 0.0
     8.0, 0.0
     12.0, 0.0
     ```
-3. Run simulator launch script <br />
-<br />
-**Run** ```$ ./avg_run.sh```
-<br />
+
+Run simulator launch script <br />
+
+```
+$ ./agv_run.sh
+```
+
+To run simulator with moving obstacles (actors), run script:
+
+```
+$ ./actors_agv_run.sh
+```
+
 
 ## Author info
 
