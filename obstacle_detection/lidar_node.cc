@@ -18,7 +18,7 @@
 #include <tf2/LinearMath/Quaternion.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 
-bool m_debug = true;
+bool m_debug = false;
 
 // Topic to publish linear and angular data
 std::string topic_pub = "/cmd_vel";
