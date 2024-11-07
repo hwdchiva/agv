@@ -70,6 +70,16 @@
           <use_event>true</use_event>
           </plugin>
 
+          <plugin filename="VisualizeLidar" name="Visualize Lidar">
+          </plugin>
+
+          <!-- View angle -->
+          <plugin filename="ViewAngle" name="View angle">
+          <gz-gui>
+            <property type="string" key="state">docked_collapsed</property>
+          </gz-gui>
+          </plugin>
+
           <!-- World statistics -->
           <plugin filename="WorldStats" name="World stats">
           <gz-gui>
@@ -91,9 +101,6 @@
           <real_time>true</real_time>
           <real_time_factor>true</real_time_factor>
           <iterations>true</iterations>
-          </plugin>
-
-          <plugin filename="VisualizeLidar" name="Visualize Lidar">
           </plugin>
 
           <!-- Plugins that add functionality to the scene -->
@@ -268,15 +275,8 @@
           </gz-gui>
           </plugin>
 
-          <!-- View angle -->
-          <plugin filename="ViewAngle" name="View angle">
-          <gz-gui>
-            <property type="string" key="state">docked_collapsed</property>
-          </gz-gui>
-          </plugin>
-
-            <!-- KeyPublisher plugin-->
-            <plugin filename="KeyPublisher" name="Key Publisher"/>
+          <!-- KeyPublisher plugin-->
+          <plugin filename="KeyPublisher" name="Key Publisher"/>
 
         </gui>
 
@@ -364,7 +364,7 @@
 
             <!-- Lidar -->
             <link name="lidar_link">
-              <pose relative_to="chassis">0.0 0 0.4 0 0 0</pose> <!--angles are in radian-->
+              <pose relative_to="chassis">0.0 0 0.4 0 0 0</pose>
               <inertial>
                 <mass>0.1</mass>
                 <inertia>
@@ -390,18 +390,18 @@
               <sensor name='gpu_lidar' type='gpu_lidar'>
               <pose>0 0 0 0 0 0</pose>
                 <topic>lidar</topic>
-                <update_rate>10</update_rate>
+                <update_rate>1</update_rate>
                 <lidar>
                   <scan>
                     <horizontal>
                       <samples>640</samples>
                       <resolution>1</resolution>
                       <!-- 
-                      <min_angle>-1.396263</min_angle>
-                      <max_angle>1.396263</max_angle>
+                      <min_angle>-1.570796</min_angle>
+                      <max_angle>1.570796</max_angle>
                       -->
-                      <min_angle>-3.142</min_angle>
-                      <max_angle>3.142</max_angle>
+                      <min_angle>-3.141593</min_angle>
+                      <max_angle>3.141593</max_angle>
                     </horizontal>
                     <vertical>
                       <samples>1</samples>
@@ -444,9 +444,9 @@
                         </cylinder>
                     </geometry>
                     <material>
-                        <ambient>1.0 0.0 0.0 1</ambient>
-                        <diffuse>1.0 0.0 0.0 1</diffuse>
-                        <specular>1.0 0.0 0.0 1</specular>
+                        <ambient>0.1 0.1 0.1 1</ambient>
+                        <diffuse>0.1 0.1 0.1 1</diffuse>
+                        <specular>0.1 0.1 0.1 1</specular>
                     </material>
                 </visual>
                 <collision name='collision'>
@@ -481,9 +481,9 @@
                         </cylinder>
                     </geometry>
                     <material>
-                        <ambient>1.0 0.0 0.0 1</ambient>
-                        <diffuse>1.0 0.0 0.0 1</diffuse>
-                        <specular>1.0 0.0 0.0 1</specular>
+                        <ambient>0.1 0.1 0.1 1</ambient>
+                        <diffuse>0.1 0.1 0.1 1</diffuse>
+                        <specular>0.1 0.1 0.1 1</specular>
                     </material>
                 </visual>
                 <collision name='collision'>
@@ -581,7 +581,7 @@
                 <right_joint>right_wheel_joint</right_joint>
                 <wheel_separation>0.9</wheel_separation>
                 <wheel_radius>0.3</wheel_radius>
-                <odom_publish_frequency>1</odom_publish_frequency>
+                <odom_publish_frequency>10</odom_publish_frequency>
                 <topic>cmd_vel</topic>
             </plugin>
         </model>
@@ -812,8 +812,16 @@
             <pose>0 0 1 0 0 1.57</pose>
           </waypoint>
           <waypoint>
+            <time>2</time>
+            <pose>0 3 1 0 0 1.57</pose>
+          </waypoint>
+          <waypoint>
             <time>4</time>
             <pose>0 6 1 0 0 1.57</pose>
+          </waypoint>
+          <waypoint>
+            <time>6</time>
+            <pose>0 9 1 0 0 1.57</pose>
           </waypoint>
           <waypoint>
             <time>8</time>
@@ -824,8 +832,16 @@
             <pose>0 12 1 0 0 -1.57</pose>
           </waypoint>
           <waypoint>
+            <time>10</time>
+            <pose>0 9 1 0 0 -1.57</pose>
+          </waypoint>
+          <waypoint>
             <time>12</time>
             <pose>0 6 1 0 0 -1.57</pose>
+          </waypoint>
+          <waypoint>
+            <time>14</time>
+            <pose>0 3 1 0 0 -1.57</pose>
           </waypoint>
           <waypoint>
             <time>16</time>

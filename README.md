@@ -11,6 +11,7 @@ All development and simulation was done using Windows Linux Subsystem (WSL)
 - ROS2 distro: Humble
 - Gazebo distro: Fortress LTS
 
+#### Update Bash Shell
 To avoid warnings and errors when lauching gazebo, please append the following to your ```.bashrc``` file.
 
 ```
@@ -23,6 +24,13 @@ export LIBGL_ALWAYS_SOFTWARE=1
 # Fix issue: QStandardPaths: wrong permissions on runtime directory /run/user/1000/, 0755 instead of 0700
 chmod 0700 /run/user/1000/
 ```
+
+#### Moving Slow?
+
+If simulated AGV is moving too slow, make sure the `Windows Subsystem for Linux` feature is enabled. To verify, follow these steps:
+- Click the windows Start Menu button and on the search bar type `Windows Features`.
+- Scroll down to the bottom of the window and make sure the box for `Windows Subsystem for Linux` is checked.
+- Click OK and restart computer.
 
 ## Documentation
 Software design architecture for an AGV can be found under the ```doc``` directory in file ```AGV_Software_Design.pdf```.<br />
